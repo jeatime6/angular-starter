@@ -2,13 +2,7 @@ import { Routes } from '@angular/router';
 
 import { CommonLayoutComponent } from './components/common';
 
-
 export const ROUTES: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    },
     {
         path: '',
         component: CommonLayoutComponent,
@@ -18,7 +12,10 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'hospital',
-                loadChildren: './components/hospital#HospitalIndexModule'
+                data: {
+                    title: '医院管理'
+                },
+                loadChildren: './components/hospital#HospitalModule'
             },
         ]
     }

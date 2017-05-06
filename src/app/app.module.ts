@@ -15,7 +15,7 @@ import { StoreModule } from '@ngrx/store';
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routing';
 // App is our top level component
-import { AppComponent } from './components';
+import { AppComponent } from './app.component';
 
 import { CommonLayoutComponent, CommonBreadcrumbsComponent } from './components/common';
 
