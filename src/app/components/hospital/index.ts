@@ -1,1 +1,1 @@
-export * from './hospital-index/hospital-index.component';
+export { HospitalIndexModule } from './hospital-index/hospital-index.module';

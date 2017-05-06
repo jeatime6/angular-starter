@@ -3,16 +3,16 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import 'rxjs/add/operator/filter';
 
 @Component({
-  selector: 'app-breadcrumbs',
-  templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.css']
+  selector: 'app-common-breadcrumbs',
+  templateUrl: './common-breadcrumbs.component.html',
+  styleUrls: ['./common-breadcrumbs.component.css']
 })
 
-export class BreadcrumbsComponent implements OnInit {
+export class CommonBreadcrumbsComponent implements OnInit {
   breadcrumbs: Array<Object>;
 
   constructor(private router: Router, private route: ActivatedRoute) { }
-  
+
   ngOnInit(): void {
     this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
       this.breadcrumbs = [];

@@ -13,14 +13,14 @@ import { StoreModule } from '@ngrx/store';
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES, CHILDROUTES } from './app.routes';
+import { ROUTES } from './app.routing';
 // App is our top level component
-import { AppComponent } from './components/app.component';
+import { AppComponent } from './components';
 
-import { LayoutComponent, BreadcrumbsComponent, DashboardComponent } from './components/public';
-import { HospitalIndexComponent } from './components/hospital';
+import { CommonLayoutComponent, CommonBreadcrumbsComponent } from './components/common';
 
-import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirective } from './components/public';
+// directives
+import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirective } from './directives';
 
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 
@@ -39,11 +39,8 @@ const APP_PROVIDERS = [
   declarations: [
     AppComponent,
 
-    LayoutComponent,
-    BreadcrumbsComponent,
-    DashboardComponent,
-
-    HospitalIndexComponent,
+    CommonLayoutComponent,
+    CommonBreadcrumbsComponent,
 
     NAV_DROPDOWN_DIRECTIVES,
     SIDEBAR_TOGGLE_DIRECTIVES,
@@ -54,7 +51,6 @@ const APP_PROVIDERS = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    RouterModule.forChild(CHILDROUTES),
     // ng-bootstrap
     NgbModule.forRoot(),
     // ngrx

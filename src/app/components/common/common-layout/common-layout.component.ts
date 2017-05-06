@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  selector: 'app-common-layout',
+  templateUrl: './common-layout.component.html',
+  styleUrls: ['./common-layout.component.css']
 })
 
-export class LayoutComponent implements OnInit {
-
+export class CommonLayoutComponent implements OnInit {
   public disabled = false;
   public status: { isopen: boolean } = { isopen: false };
 

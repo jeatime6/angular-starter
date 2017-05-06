@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { FullLayoutComponent } from './full-layout.component';
+import { HospitalAddComponent } from './hospital-add.component';
 
-describe('FullLayoutComponent', () => {
-  let component: FullLayoutComponent;
-  let fixture: ComponentFixture<FullLayoutComponent>;
+describe('HospitalAddComponent', () => {
+  let component: HospitalAddComponent;
+  let fixture: ComponentFixture<HospitalAddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FullLayoutComponent ]
+      declarations: [ HospitalAddComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FullLayoutComponent);
+    fixture = TestBed.createComponent(HospitalAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
