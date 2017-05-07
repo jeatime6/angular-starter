@@ -31,16 +31,45 @@ export class AuthBaseService {
                     this.loggedIn = true;
                     this.currentUser = user;
                     this.userLoadededEvent.emit(user);
+
+                    let loginUser = <LoginUserModel>{
+                        IsLogin: true,
+                        UserInfo: user
+                    };
+                    store$.dispatch({
+                        type: LOGIN,
+                        payload: loginUser
+                    });
                 } else {
                     this.loggedIn = false;
+
+                    store$.dispatch({
+                        type: LOGOUT,
+                        payload: null
+                    });
                 }
             })
             .catch((err) => {
                 this.loggedIn = false;
+
+                store$.dispatch({
+                    type: LOGOUT,
+                    payload: null
+                });
             });
 
         this.mgr.events.addUserLoaded(user => {
             this.currentUser = user;
+
+            let loginUser = <LoginUserModel>{
+                IsLogin: true,
+                UserInfo: user
+            };
+            store$.dispatch({
+                type: LOGIN,
+                payload: loginUser
+            });
+
             if (ENV !== 'production') {
                 console.log('authService addUserLoaded', user);
             }
@@ -50,7 +79,13 @@ export class AuthBaseService {
                 console.log('user unloaded');
             }
             this.loggedIn = false;
+
+            store$.dispatch({
+                type: LOGOUT,
+                payload: null
+            });
         });
+        this.loginUser = store$.select('loginUserReducer');
     }
 
     clearState() {

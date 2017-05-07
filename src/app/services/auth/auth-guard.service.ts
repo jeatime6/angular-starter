@@ -1,17 +1,27 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, CanActivateChild, Router } from '@angular/router';
 
 import { AuthBaseService } from './auth-base.service';
 
 @Injectable()
-export class AuthGuardService implements CanActivate {
+export class AuthGuardService implements CanActivate, CanActivateChild {
 
     constructor(private authBaseService: AuthBaseService, private router: Router) { }
 
-    canActivate() {
-        const isLoggedIn = this.authBaseService.isLoggedInObs();
-        isLoggedIn.subscribe(loggedin => {
-            if (!loggedin) {
+    public canActivate() {
+        console.log('canActivate');
+        return this.checkIsLogin();
+    }
+
+    public canActivateChild() {
+        console.log('canActivateChild');
+        return this.checkIsLogin();
+    }
+
+    public checkIsLogin() {
+        let isLoggedIn = this.authBaseService.isLoggedInObs();
+        isLoggedIn.subscribe((loggedIn: boolean) => {
+            if (!loggedIn) {
                 // 提示跳转
                 console.log(this.router.url);
                 this.router.navigate(['/auth']);

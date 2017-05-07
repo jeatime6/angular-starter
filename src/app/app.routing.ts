@@ -7,7 +7,7 @@ import { AuthGuardService } from './services';
 export const ROUTES: Routes = [
     {
         path: '',
-        canActivateChild: [AuthGuardService],
+        // canActivateChild: [AuthGuardService],
         component: CommonLayoutComponent,
         data: {
             title: '首页'
