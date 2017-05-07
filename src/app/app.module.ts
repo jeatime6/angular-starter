@@ -8,7 +8,8 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // ngrx
 import { StoreModule } from '@ngrx/store';
-
+// ng2-charts
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -17,7 +18,10 @@ import { ROUTES } from './app.routing';
 // App is our top level component
 import { AppComponent } from './app.component';
 
-import { CommonLayoutComponent, CommonBreadcrumbsComponent } from './components/common';
+import { CommonAuthComponent, CommonLayoutComponent, CommonBreadcrumbsComponent } from './components/common';
+
+// reducers
+import { LayoutSideBarReducer, LoginUserReducer } from './reducers';
 
 // directives
 import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirective } from './directives';
@@ -25,6 +29,9 @@ import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirectiv
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 
 import '../styles/style.scss';
+
+// chart.js
+import 'chart.js/src/chart.js';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -39,6 +46,7 @@ const APP_PROVIDERS = [
   declarations: [
     AppComponent,
 
+    CommonAuthComponent,
     CommonLayoutComponent,
     CommonBreadcrumbsComponent,
 
@@ -50,12 +58,14 @@ const APP_PROVIDERS = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    ChartsModule,
     RouterModule.forRoot(ROUTES),
     // ng-bootstrap
     NgbModule.forRoot(),
     // ngrx
     StoreModule.provideStore({
-
+      layoutSideBarReducers: LayoutSideBarReducer,
+      loginUserReducer: LoginUserReducer
     })
   ],
   providers: [

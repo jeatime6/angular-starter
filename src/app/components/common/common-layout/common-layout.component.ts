@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { SidebarNavGroupModel, SidebarNavItemModel } from '../../../models/SidebarNavModel';
+import { ADD_NAV, REPLACE_NAV } from '../../../actions/layout-sidebar.action';
+
 @Component({
   selector: 'app-common-layout',
   templateUrl: './common-layout.component.html',
@@ -7,18 +12,34 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class CommonLayoutComponent implements OnInit {
-  public disabled = false;
-  public status: { isopen: boolean } = { isopen: false };
 
-  public toggled(open: boolean): void {
-    console.log('Dropdown is now: ', open);
+  layoutSideBars: Observable<SidebarNavGroupModel[]>;
+
+  constructor(
+    private store$: Store<SidebarNavGroupModel[]>
+  ) {
+    this.layoutSideBars = store$.select('layoutSideBarReducers');
   }
 
-  public toggleDropdown($event: MouseEvent): void {
-    $event.preventDefault();
-    $event.stopPropagation();
-    this.status.isopen = !this.status.isopen;
+  ngOnInit(): void {
+    this.initDashboardSideBar();
   }
 
-  ngOnInit(): void { }
+  initDashboardSideBar() {
+    let addSideBar = [{
+      GroupName: '医院管理',
+      GroupIcon: '',
+      NavItems: [
+        {
+          ItemName: '医院列表',
+          ItemIcon: '',
+          ItemUrl: '/hospital'
+        }
+      ]
+    }];
+    this.store$.dispatch({
+      type: REPLACE_NAV,
+      payload: addSideBar
+    });
+  }
 }

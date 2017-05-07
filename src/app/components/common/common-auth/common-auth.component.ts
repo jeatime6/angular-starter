@@ -1,0 +1,15 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthBaseService } from '../../../services';
+
+@Component({
+  selector: 'app-common-auth',
+  templateUrl: './common-auth.component.html',
+  styleUrls: ['./common-auth.component.css']
+})
+export class CommonAuthComponent {
+
+  constructor(private authBaseService: AuthBaseService, private router: Router) {
+    this.authBaseService.endSigninMainWindow();
+  }
+}
