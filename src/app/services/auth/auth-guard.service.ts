@@ -24,7 +24,7 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
             if (!loggedIn) {
                 // 提示跳转
                 console.log(this.router.url);
-                this.router.navigate(['/auth']);
+                this.authBaseService.startSigninMainWindow();
             }
         });
         return isLoggedIn;

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthBaseService } from '../../../services';
+
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { SidebarNavGroupModel, SidebarNavItemModel } from '../../../models/SidebarNavModel';
@@ -16,7 +18,8 @@ export class CommonLayoutComponent implements OnInit {
   layoutSideBars: Observable<SidebarNavGroupModel[]>;
 
   constructor(
-    private store$: Store<SidebarNavGroupModel[]>
+    public authBaseService: AuthBaseService,
+    public store$: Store<SidebarNavGroupModel[]>
   ) {
     this.layoutSideBars = store$.select('layoutSideBarReducers');
   }
@@ -41,5 +44,9 @@ export class CommonLayoutComponent implements OnInit {
       type: REPLACE_NAV,
       payload: addSideBar
     });
+  }
+
+  userSignOut() {
+    this.authBaseService.startSignoutMainWindow();
   }
 }

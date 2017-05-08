@@ -22,13 +22,13 @@ let _authSettings = {
   authority: '',
   client_id: '',
   redirect_uri: '',
-  //redirect_uri: '',
+  // redirect_uri: '',
   post_logout_redirect_uri: '',
   response_type: '',
   scope: '',
   silent_redirect_uri: '',
   automaticSilentRenew: true,
-  //silentRequestTimeout:0,
+  // silentRequestTimeout:0,
   filterProtocolClaims: true,
   loadUserInfo: true
 };
@@ -44,15 +44,15 @@ let setBaseUrl: Function = (srcApiHostUrl: string, srcHostUrl: string, srcAuthUr
   _authSettings = {
     authority: `${srcAuthUrl}/auth/identity`,
     client_id: 'p0-ng2-js',
-    redirect_uri: `${srcHostUrl}/auth`,
-    //redirect_uri: `${srcHostUrl}/popup.html`,
-    post_logout_redirect_uri: srcHostUrl,
+    redirect_uri: `${srcHostUrl}/authorize`,
+    // redirect_uri: `${srcHostUrl}/popup.html`,
+    post_logout_redirect_uri: `${srcHostUrl}/unauthorize`,
     response_type: 'id_token token',
     scope: 'openid profile api',
 
     silent_redirect_uri: srcHostUrl,
     automaticSilentRenew: true,
-    //silentRequestTimeout:10000,
+    // silentRequestTimeout:10000,
 
     filterProtocolClaims: true,
     loadUserInfo: true
@@ -94,7 +94,7 @@ if ('production' === ENV) {
     // custom providers in development
   ];
 
-  setBaseUrl('http://p0dev.crabyter.info/webapi', 'http://localhost:3000', 'http://p0test.crabyter.info');
+  setBaseUrl('http://p0dev.crabyter.info/webapi', 'http://localhost:4000', 'http://p0test.crabyter.info');
 }
 
 export const decorateModuleRef = _decorateModuleRef;

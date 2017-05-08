@@ -1,13 +1,12 @@
 import { Routes } from '@angular/router';
 
-import { CommonAuthComponent, CommonLayoutComponent } from './components/common';
+import { CommonAuthComponent, CommonUnauthComponent, CommonLayoutComponent } from './components/common';
 
 import { AuthGuardService } from './services';
 
 export const ROUTES: Routes = [
     {
         path: '',
-        // canActivateChild: [AuthGuardService],
         component: CommonLayoutComponent,
         data: {
             title: '首页'
@@ -23,6 +22,7 @@ export const ROUTES: Routes = [
                 data: {
                     title: 'Dashboard'
                 },
+                canActivateChild: [AuthGuardService],
                 loadChildren: './components/dashboard#DashboardModule'
             },
             {
@@ -30,13 +30,18 @@ export const ROUTES: Routes = [
                 data: {
                     title: '医院管理'
                 },
+                canActivateChild: [AuthGuardService],
                 loadChildren: './components/hospital#HospitalModule'
             }
         ]
     },
     {
-        path: 'auth',
+        path: 'authorize',
         component: CommonAuthComponent
+    },
+    {
+        path: 'unauthorize',
+        component: CommonUnauthComponent
     }
 ];
 

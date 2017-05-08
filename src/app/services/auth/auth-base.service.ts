@@ -1,6 +1,7 @@
 
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -23,42 +24,12 @@ export class AuthBaseService {
 
     constructor(
         private http: Http,
+        private router: Router,
         private store$: Store<LoginUserModel[]>
     ) {
-        this.mgr.getUser()
-            .then((user) => {
-                if (user) {
-                    this.loggedIn = true;
-                    this.currentUser = user;
-                    this.userLoadededEvent.emit(user);
+        console.log(this.mgr);
 
-                    let loginUser = <LoginUserModel>{
-                        IsLogin: true,
-                        UserInfo: user
-                    };
-                    store$.dispatch({
-                        type: LOGIN,
-                        payload: loginUser
-                    });
-                } else {
-                    this.loggedIn = false;
-
-                    store$.dispatch({
-                        type: LOGOUT,
-                        payload: null
-                    });
-                }
-            })
-            .catch((err) => {
-                this.loggedIn = false;
-
-                store$.dispatch({
-                    type: LOGOUT,
-                    payload: null
-                });
-            });
-
-        this.mgr.events.addUserLoaded(user => {
+        this.mgr.events.addUserLoaded((user) => {
             this.currentUser = user;
 
             let loginUser = <LoginUserModel>{
@@ -88,84 +59,107 @@ export class AuthBaseService {
         this.loginUser = store$.select('loginUserReducer');
     }
 
-    clearState() {
-        this.mgr.clearStaleState().then(function () {
-            console.log('clearStateState success');
-        }).catch(function (e) {
-            console.log('clearStateState error', e.message);
-        });
-    }
-
-    getUser() {
-        this.mgr.getUser().then((user) => {
-            console.log('got user', user);
-            this.currentUser = user;
-            this.userLoadededEvent.emit(user);
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
-
-    isLoggedInObs(): Observable<boolean> {
-        return Observable.fromPromise(this.mgr.getUser()).map<User, boolean>((user) => {
-            if (user) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-    }
-
-    removeUser() {
-        this.mgr.removeUser().then(() => {
-            this.userLoadededEvent.emit(null);
-            console.log('user removed');
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
-
-    startSigninMainWindow() {
-        this.mgr.signinRedirect({ data: 'some data' }).then(function () {
-            console.log('signinRedirect done');
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
-
-    endSigninMainWindow(url?: string) {
-        this.mgr.signinRedirectCallback(url).then(function (user) {
-            console.log('signed in', user);
-        }).catch(function (err) {
-            console.log(err);
-        });
-    }
-
-    startSignoutMainWindow() {
-        this.mgr.signoutRedirect().then(function (resp) {
-            console.log('signed out', resp);
-            setTimeout(5000, () => {
-                console.log('testing to see if fired...');
-
+    public clearState() {
+        this.mgr.clearStaleState()
+            .then(() => {
+                console.log('clearStateState success');
+            }).catch((e) => {
+                console.log('clearStateState error', e.message);
             });
-        }).catch(function (err) {
-            console.log(err);
-        });
+    }
+
+    /**
+     * 获取用户信息
+     */
+    public getUser() {
+        this.mgr.getUser()
+            .then((user) => {
+                console.log('got user', user);
+                this.currentUser = user;
+                this.userLoadededEvent.emit(user);
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
+
+    /**
+     * 判断是否登录，用于AuthGuardService
+     */
+    public isLoggedInObs(): Observable<boolean> {
+        return Observable.fromPromise(this.mgr.getUser())
+            .map<User, boolean>((user) => {
+                if (user) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+    }
+
+    public removeUser() {
+        this.mgr.removeUser()
+            .then(() => {
+                this.userLoadededEvent.emit(null);
+                console.log('user removed');
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
+
+    /**
+     * 跳转认证
+     */
+    public startSigninMainWindow() {
+        this.mgr.signinRedirect({ data: 'some data' })
+            .then(() => {
+                console.log('signinRedirect done');
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
+
+    /**
+     * 认证完成后回调
+     */
+    public endSigninMainWindow() {
+        this.mgr.signinRedirectCallback()
+            .then((user) => {
+                console.log('signed in', user);
+                this.router.navigate(['/dashboard']);
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
+
+    /**
+     * 开始登出
+     */
+    public startSignoutMainWindow() {
+        this.mgr.signoutRedirect()
+            .then((resp) => {
+                console.log('signed out', resp);
+            }).catch((err) => {
+                console.log(err);
+            });
     };
 
-    endSignoutMainWindow() {
-        this.mgr.signoutRedirectCallback().then(function (resp) {
-            console.log('signed out', resp);
-        }).catch(function (err) {
-            console.log(err);
-        });
+    /**
+     * 结束登出
+     */
+    public endSignoutMainWindow() {
+        this.mgr.signoutRedirectCallback()
+            .then((resp) => {
+                console.log('signed out', resp);
+            }).catch((err) => {
+                console.log(err);
+            });
     };
 
     /**
      * Example of how you can make auth request using angulars http methods.
      * @param options if options are not supplied the default content type is application/json
      */
-    AuthGet(url: string, options?: RequestOptions): Observable<Response> {
+    public AuthGet(url: string, options?: RequestOptions): Observable<Response> {
         if (options) {
             options = this._setRequestOptions(options);
         } else {
@@ -177,7 +171,7 @@ export class AuthBaseService {
     /**
      * @param options if options are not supplied the default content type is application/json
      */
-    AuthPut(url: string, data: any, options?: RequestOptions): Observable<Response> {
+    public AuthPut(url: string, data: any, options?: RequestOptions): Observable<Response> {
 
         const body = JSON.stringify(data);
 
@@ -192,7 +186,7 @@ export class AuthBaseService {
     /**
      * @param options if options are not supplied the default content type is application/json
      */
-    AuthDelete(url: string, options?: RequestOptions): Observable<Response> {
+    public AuthDelete(url: string, options?: RequestOptions): Observable<Response> {
 
         if (options) {
             options = this._setRequestOptions(options);
@@ -205,7 +199,7 @@ export class AuthBaseService {
     /**
      * @param options if options are not supplied the default content type is application/json
      */
-    AuthPost(url: string, data: any, options?: RequestOptions): Observable<Response> {
+    public AuthPost(url: string, data: any, options?: RequestOptions): Observable<Response> {
 
         const body = JSON.stringify(data);
 
