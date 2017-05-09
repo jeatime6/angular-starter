@@ -122,13 +122,7 @@ export class AuthBaseService {
      * 认证完成后回调
      */
     public endSigninMainWindow() {
-        this.mgr.signinRedirectCallback()
-            .then((user) => {
-                console.log('signed in', user);
-                this.router.navigate(['/dashboard']);
-            }).catch((err) => {
-                console.log(err);
-            });
+        return this.mgr.signinRedirectCallback();
     }
 
     /**
@@ -147,12 +141,7 @@ export class AuthBaseService {
      * 结束登出
      */
     public endSignoutMainWindow() {
-        this.mgr.signoutRedirectCallback()
-            .then((resp) => {
-                console.log('signed out', resp);
-            }).catch((err) => {
-                console.log(err);
-            });
+        return this.mgr.signoutRedirectCallback();
     };
 
     /**

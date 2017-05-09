@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AuthBaseService } from '../../../services';
+
 @Component({
   selector: 'app-common-unauth',
   templateUrl: './common-unauth.component.html',
@@ -7,5 +9,15 @@ import { Component } from '@angular/core';
 })
 export class CommonUnauthComponent {
 
-  constructor() { }
+  public message = '正在登出...';
+
+  constructor(private authBaseService: AuthBaseService) {
+    this.authBaseService.endSignoutMainWindow()
+      .then((resp) => {
+        console.log('signed out', resp);
+        this.message = '您已成功退出！';
+      }).catch((err) => {
+        console.log(err);
+      });
+  }
 }
