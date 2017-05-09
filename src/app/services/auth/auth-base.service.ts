@@ -11,27 +11,21 @@ import { LOGIN, LOGOUT, AUTH_USER } from '../../actions/layout-sidebar.action';
 import { UserManager, Log, MetadataService, User } from 'oidc-client';
 import { AuthSettings } from '../../environment';
 
+import _ from 'lodash';
+
 @Injectable()
 export class AuthBaseService {
-    mgr: UserManager = new UserManager(AuthSettings);
-    userLoadededEvent: EventEmitter<User> = new EventEmitter<User>();
-    currentUser: User;
-    loggedIn = false;
+    mgr = new UserManager(AuthSettings);
 
     loginUser: Observable<LoginUserModel>;
-
     authHeaders: Headers;
 
     constructor(
         private http: Http,
         private router: Router,
-        private store$: Store<LoginUserModel[]>
+        private store$: Store<LoginUserModel>
     ) {
-        console.log(this.mgr);
-
         this.mgr.events.addUserLoaded((user) => {
-            this.currentUser = user;
-
             let loginUser = <LoginUserModel>{
                 IsLogin: true,
                 UserInfo: user
@@ -40,32 +34,22 @@ export class AuthBaseService {
                 type: LOGIN,
                 payload: loginUser
             });
-
-            if (ENV !== 'production') {
-                console.log('authService addUserLoaded', user);
-            }
         });
         this.mgr.events.addUserUnloaded((e) => {
-            if (ENV !== 'production') {
-                console.log('user unloaded');
-            }
-            this.loggedIn = false;
-
             store$.dispatch({
                 type: LOGOUT,
                 payload: null
             });
         });
-        this.loginUser = store$.select('loginUserReducer');
-    }
+        this.loginUser = store$.select('loginUserReducer').filter((loginUser: LoginUserModel) => { return !_.isNil(loginUser) && !_.isNil(loginUser.UserInfo); });
+        this.loginUser.subscribe((loginUser) => {
+            // console.log('ngrx -- setAuthHeaders');
+            // console.log(loginUser);
+            this._setAuthHeaders(loginUser.UserInfo);
+        });
 
-    public clearState() {
-        this.mgr.clearStaleState()
-            .then(() => {
-                console.log('clearStateState success');
-            }).catch((e) => {
-                console.log('clearStateState error', e.message);
-            });
+        // 获取用户
+        this.getUser();
     }
 
     /**
@@ -74,9 +58,14 @@ export class AuthBaseService {
     public getUser() {
         this.mgr.getUser()
             .then((user) => {
-                console.log('got user', user);
-                this.currentUser = user;
-                this.userLoadededEvent.emit(user);
+                let loginUser = <LoginUserModel>{
+                    IsLogin: true,
+                    UserInfo: user
+                };
+                this.store$.dispatch({
+                    type: LOGIN,
+                    payload: loginUser
+                });
             }).catch((err) => {
                 console.log(err);
             });
@@ -96,24 +85,12 @@ export class AuthBaseService {
             });
     }
 
-    public removeUser() {
-        this.mgr.removeUser()
-            .then(() => {
-                this.userLoadededEvent.emit(null);
-                console.log('user removed');
-            }).catch((err) => {
-                console.log(err);
-            });
-    }
-
     /**
      * 跳转认证
      */
     public startSigninMainWindow() {
-        this.mgr.signinRedirect({ data: 'some data' })
-            .then(() => {
-                console.log('signinRedirect done');
-            }).catch((err) => {
+        this.mgr.signinRedirect()
+            .catch((err) => {
                 console.log(err);
             });
     }
@@ -122,7 +99,6 @@ export class AuthBaseService {
      * 认证完成后回调
      */
     public endSigninMainWindow() {
-        return this.mgr.signinRedirectCallback();
     }
 
     /**
@@ -130,9 +106,7 @@ export class AuthBaseService {
      */
     public startSignoutMainWindow() {
         this.mgr.signoutRedirect()
-            .then((resp) => {
-                console.log('signed out', resp);
-            }).catch((err) => {
+            .catch((err) => {
                 console.log(err);
             });
     };

@@ -18,7 +18,15 @@ import { ROUTES } from './app.routing';
 // App is our top level component
 import { AppComponent } from './app.component';
 
-import { CommonAuthComponent, CommonUnauthComponent, CommonLayoutComponent, CommonBreadcrumbsComponent } from './components/common';
+import {
+  CommonAlertComponent,
+  CommonAuthComponent,
+  CommonUnauthComponent,
+  CommonLayoutComponent,
+  CommonBreadcrumbsComponent,
+  CommonNotfoundComponent,
+  CommonUnavailableComponent
+} from './components/common';
 
 // reducers
 import { LayoutSideBarReducer, LoginUserReducer } from './reducers';
@@ -46,10 +54,13 @@ const APP_PROVIDERS = [
   declarations: [
     AppComponent,
 
+    CommonAlertComponent,
     CommonAuthComponent,
     CommonUnauthComponent,
     CommonLayoutComponent,
     CommonBreadcrumbsComponent,
+    CommonNotfoundComponent,
+    CommonUnavailableComponent,
 
     NAV_DROPDOWN_DIRECTIVES,
     SIDEBAR_TOGGLE_DIRECTIVES,
@@ -72,6 +83,9 @@ const APP_PROVIDERS = [
   providers: [
     ENV_PROVIDERS,
     APP_PROVIDERS
+  ],
+  entryComponents: [
+    CommonAlertComponent
   ]
 })
 

@@ -3,7 +3,7 @@ import { User } from 'oidc-client';
 import { LoginUserModel, AuthInfoModel } from '../models/LoginUserModel';
 import { LOGIN, LOGOUT, AUTH_USER } from '../actions/layout-sidebar.action';
 
-export function LoginUserReducer(state = <LoginUserModel>{}, action: Action) {
+export function LoginUserReducer(state: LoginUserModel, action: Action) {
     switch (action.type) {
         case LOGIN: {
             return action.payload;

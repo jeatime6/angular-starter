@@ -1,6 +1,12 @@
 import { Routes } from '@angular/router';
 
-import { CommonAuthComponent, CommonUnauthComponent, CommonLayoutComponent } from './components/common';
+import {
+    CommonAuthComponent,
+    CommonUnauthComponent,
+    CommonLayoutComponent,
+    CommonNotfoundComponent,
+    CommonUnavailableComponent
+} from './components/common';
 
 import { AuthGuardService } from './services';
 
@@ -42,6 +48,14 @@ export const ROUTES: Routes = [
     {
         path: 'unauthorize',
         component: CommonUnauthComponent
+    },
+    {
+        path: '404',
+        component: CommonNotfoundComponent
+    },
+    {
+        path: '500',
+        component: CommonUnavailableComponent
     }
 ];
 
