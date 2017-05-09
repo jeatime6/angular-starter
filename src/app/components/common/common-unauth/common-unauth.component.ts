@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AuthBaseService } from '../../../services';
+
 @Component({
   selector: 'app-common-unauth',
   templateUrl: './common-unauth.component.html',
@@ -7,5 +9,12 @@ import { Component } from '@angular/core';
 })
 export class CommonUnauthComponent {
 
-  constructor() { }
+  constructor(private authBaseService: AuthBaseService) {
+    this.authBaseService.endSignoutMainWindow()
+      .then((resp) => {
+        console.log('signed out');
+      }).catch((err) => {
+        console.log(err);
+      });
+  }
 }
