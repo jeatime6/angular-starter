@@ -12,6 +12,7 @@ export class HospitalService {
      * 获取医院列表
      */
     public getHospitals() {
+        // /api/cencepts/hospital/{pageNum}/{pageSize}
         return this.authBaseService.AuthGet('').map((rep: Response) => rep.json());
     }
 }

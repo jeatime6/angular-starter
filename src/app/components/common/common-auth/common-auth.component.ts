@@ -13,7 +13,7 @@ export class CommonAuthComponent {
   constructor(private authBaseService: AuthBaseService, private router: Router) {
     this.authBaseService.endSigninMainWindow()
       .then((user) => {
-        console.log('signed in', user);
+        // console.log('signed in', user);
         this.router.navigate(['/dashboard']);
       }).catch((err) => {
         console.log(err);

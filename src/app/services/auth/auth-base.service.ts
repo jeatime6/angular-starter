@@ -99,6 +99,7 @@ export class AuthBaseService {
      * 认证完成后回调
      */
     public endSigninMainWindow() {
+        return this.mgr.signinRedirectCallback();
     }
 
     /**
