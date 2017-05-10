@@ -25,7 +25,7 @@ const routes: Routes = [
         component: HospitalAddComponent
       },
       {
-        path: 'detail',
+        path: 'detail/:hospitalid',
         data: {
           title: '医院详情'
         },
