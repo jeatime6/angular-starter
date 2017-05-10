@@ -28,7 +28,7 @@ export const ROUTES: Routes = [
                 data: {
                     title: 'Dashboard'
                 },
-                // canActivateChild: [AuthGuardService],
+                canActivateChild: [AuthGuardService],
                 loadChildren: './components/dashboard#DashboardModule'
             },
             {
@@ -36,7 +36,7 @@ export const ROUTES: Routes = [
                 data: {
                     title: '医院管理'
                 },
-                // canActivateChild: [AuthGuardService],
+                canActivateChild: [AuthGuardService],
                 loadChildren: './components/hospital#HospitalModule'
             }
         ]

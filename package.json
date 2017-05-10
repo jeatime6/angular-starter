@@ -66,7 +66,8 @@
     "webdriver:start": "npm run webdriver-manager start",
     "webdriver:update": "webdriver-manager update",
     "webpack-dev-server": "webpack-dev-server",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "updatecrabyter": "npm update crabyter-p0-server --registry=http://npm.crabyter.info"
   },
   "dependencies": {
     "@angular/animations": "~4.0.3",
@@ -87,8 +88,10 @@
     "@ngrx/store": "^2.2.2",
     "chart.js": "^2.5.0",
     "core-js": "^2.4.1",
+    "crabyter-p0-server": "^1.0.660",
     "http-server": "^0.9.0",
     "ie-shim": "^0.1.0",
+    "immutable": "^3.8.1",
     "jasmine-core": "^2.5.2",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",

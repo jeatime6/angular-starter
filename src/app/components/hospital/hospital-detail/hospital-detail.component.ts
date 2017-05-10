@@ -17,7 +17,7 @@ export class HospitalDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.params$ = this.activatedRoute.params.switch()
+    // this.params$ = this.activatedRoute.params.switch()
 
   }
 
