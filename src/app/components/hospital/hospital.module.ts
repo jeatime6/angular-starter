@@ -9,7 +9,6 @@ import { HospitalRoutes } from './hospital.routing';
 
 import { HospitalComponent } from './hospital.component';
 import { HospitalAddComponent } from './hospital-add/hospital-add.component';
-import { HospitalDetailComponent } from './hospital-detail/hospital-detail.component';
 import { HospitalListComponent } from './hospital-list/hospital-list.component';
 import { HospitalUpdateComponent } from './hospital-update/hospital-update.component';
 
@@ -23,7 +22,6 @@ import { HospitalUpdateComponent } from './hospital-update/hospital-update.compo
     declarations: [
         HospitalComponent,
         HospitalAddComponent,
-        HospitalDetailComponent,
         HospitalListComponent,
         HospitalUpdateComponent
     ]

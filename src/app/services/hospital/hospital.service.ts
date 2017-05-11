@@ -22,7 +22,7 @@ export class HospitalService {
      * 根据配置信息创建医院实体
      * @memberOf HospitalService
      */
-    createHospitalModel(hospital: ConceptHospitalModel) {
+    public createConceptHospitalModel(hospital: ConceptHospitalModel) {
         return <T_ConceptDetailViewModel>{
             Attributes: [
                 {
@@ -75,6 +75,44 @@ export class HospitalService {
             ConceptNameAb: hospital.ConceptNameAb,
             ConceptCode: hospital.ConceptCode
         };
+    }
+
+    public createHospitalModel(conceptDetail: T_ConceptDetailViewModel) {
+        let hospital = <ConceptHospitalModel>{};
+        if (!_.isNil(conceptDetail)) {
+            hospital.ConceptCode = conceptDetail.ConceptCode;
+            hospital.ConceptNameAb = conceptDetail.ConceptNameAb;
+            hospital.ConceptName = conceptDetail.ConceptName;
+            hospital.ConceptDefinition = conceptDetail.ConceptDefinition;
+            // 属性值
+            conceptDetail.Attributes.forEach((attrbute) => {
+                switch (attrbute.ConceptTypeAttrID) {
+                    case HospitalConfigHelper.AddressAttrModel.AttributeID: {
+                        hospital.HospitalAddress = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.BedCountAttrModel.AttributeID: {
+                        hospital.HospitalBedCount = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.CityAttrModel.AttributeID: {
+                        hospital.HospitalCity = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.CountyAttrModel.AttributeID: {
+                        hospital.HospitalCounty = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.LevelAttrModel.AttributeID: {
+                        hospital.HospitalLevel = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.ProvinceAttrModel.AttributeID: {
+                        hospital.HospitalProvince = attrbute.AttributeValue;
+                    }; break;
+                    case HospitalConfigHelper.TypeAttrModel.AttributeID: {
+                        hospital.HospitalType = attrbute.AttributeValue;
+                    }; break;
+                    default: break;
+                }
+            });
+        }
+        return hospital;
     }
 
     /**

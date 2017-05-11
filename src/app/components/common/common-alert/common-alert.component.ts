@@ -52,7 +52,7 @@ export class CommonAlertComponent {
    * 
    * @memberOf CommonAlertComponent
    */
-  setConfig(options: CommonAlertContext) {
+  setConfig(options?: any) {
     _.extend(this.context, options);
     return this;
   }

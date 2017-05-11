@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router } from '@angular/router';
 
-import { CommonAlertComponent } from '../../components/common/common-alert/common-alert.component';
-import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
 import { AuthBaseService } from './auth-base.service';
+import { CommonAlertService } from '../common/common-alert.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate, CanActivateChild {
 
     constructor(
-        private authBaseService: AuthBaseService,
         private router: Router,
-        private modalService: NgbModal
+        private authBaseService: AuthBaseService,
+        private commonAlertService: CommonAlertService
     ) {
         // this.router.events.subscribe((event) => {
         //     console.log(event);
@@ -34,17 +32,11 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
         isLoggedIn.subscribe((loggedIn: boolean) => {
             if (!loggedIn) {
                 // 提示跳转
-                let modalAlert = this.modalService
-                    .open(CommonAlertComponent, <NgbModalOptions>{
-                        size: 'sm',
-                        keyboard: false,
-                        backdrop: 'static'
+                this.commonAlertService
+                    .openModal({ message: '请先登陆！' })
+                    .subscribe((res) => {
+                        this.authBaseService.startSigninMainWindow();
                     });
-                modalAlert.componentInstance.setConfig({ message: '请先登陆！' });
-                modalAlert.result.then((res) => {
-                    // console.log(res);
-                    this.authBaseService.startSigninMainWindow();
-                });
             }
         });
         return isLoggedIn;

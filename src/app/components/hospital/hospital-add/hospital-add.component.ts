@@ -34,8 +34,8 @@ export class HospitalAddComponent implements OnInit {
 
   }
 
-  submitHospital() {
-    let hospital = this.hospitalService.createHospitalModel(this.hospitalDetail);
+  public submitHospital() {
+    let hospital = this.hospitalService.createConceptHospitalModel(this.hospitalDetail);
     console.log(hospital);
     this.hospitalService.addHospital(hospital)
       .subscribe((data) => {
@@ -56,7 +56,7 @@ export class HospitalAddComponent implements OnInit {
       });
   }
 
-  back() {
+  public back() {
     this.router.navigate(['/hospital']);
   }
 }

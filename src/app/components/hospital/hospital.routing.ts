@@ -31,13 +31,6 @@ const routes: Routes = [
           title: '修改医院'
         },
         component: HospitalAddComponent
-      },
-      {
-        path: 'detail/:hospitalid',
-        data: {
-          title: '医院详情'
-        },
-        component: HospitalDetailComponent
       }
     ]
   }
