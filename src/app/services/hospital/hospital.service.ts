@@ -11,6 +11,8 @@ import {
     T_ConceptDetailViewModel
 } from 'crabyter-p0-server/ViewModel';
 
+import _ from 'lodash';
+
 @Injectable()
 export class HospitalService {
 

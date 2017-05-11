@@ -88,4 +88,4 @@ export class HospitalUpdateComponent implements OnInit, OnDestroy {
   public back() {
     this.router.navigate(['/hospital']);
   }
-  H
+}  
