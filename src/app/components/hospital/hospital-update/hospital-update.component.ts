@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { CommonAlertComponent } from '../../common/common-alert/common-alert.component';
 import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
@@ -11,11 +11,11 @@ import { HospitalService } from '../../../services';
 import { ConceptHospitalModel, HospitalConfigHelper } from '../../../models/HospitalConfigModel';
 
 @Component({
-  selector: 'app-hospital-add',
-  templateUrl: './hospital-add.component.html',
-  styleUrls: ['./hospital-add.component.css']
+  selector: 'app-hospital-update',
+  templateUrl: './hospital-update.component.html',
+  styleUrls: ['./hospital-update.component.css']
 })
-export class HospitalAddComponent implements OnInit {
+export class HospitalUpdateComponent implements OnInit {
 
   // 模板绑定数据
   hospitalDetail = <ConceptHospitalModel>{};
@@ -23,15 +23,17 @@ export class HospitalAddComponent implements OnInit {
   enumConceptHospitalType = ConceptHospitalType;
   enumConceptHospitalLevel = ConceptHospitalLevel;
 
-  constructor
-    (
+  constructor(
     private hospitalService: HospitalService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal
-    ) { }
+  ) { }
 
   ngOnInit() {
-
+    this.activatedRoute.params.subscribe((params) => {
+      
+    });
   }
 
   submitHospital() {
@@ -60,6 +62,3 @@ export class HospitalAddComponent implements OnInit {
     this.router.navigate(['/hospital']);
   }
 }
-
-
-

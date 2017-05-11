@@ -4,6 +4,7 @@ import { HospitalComponent } from './hospital.component';
 import { HospitalListComponent } from './hospital-list/hospital-list.component';
 import { HospitalAddComponent } from './hospital-add/hospital-add.component';
 import { HospitalDetailComponent } from './hospital-detail/hospital-detail.component';
+import { HospitalUpdateComponent } from './hospital-update/hospital-update.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,13 @@ const routes: Routes = [
         path: 'add',
         data: {
           title: '添加医院'
+        },
+        component: HospitalAddComponent
+      },
+      {
+        path: 'update/:hospitalid',
+        data: {
+          title: '修改医院'
         },
         component: HospitalAddComponent
       },

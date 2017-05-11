@@ -135,9 +135,7 @@ export class AuthBaseService {
     /**
      * @param options if options are not supplied the default content type is application/json
      */
-    public AuthPut(url: string, data: any, options?: RequestOptions): Observable<Response> {
-
-        const body = JSON.stringify(data);
+    public AuthPut(url: string, body: any, options?: RequestOptions): Observable<Response> {
 
         if (options) {
             options = this._setRequestOptions(options);
@@ -163,22 +161,15 @@ export class AuthBaseService {
     /**
      * @param options if options are not supplied the default content type is application/json
      */
-    public AuthPost(url: string, data: any, options?: RequestOptions): Observable<Response> {
-
-        const body = JSON.stringify(data);
+    public AuthPost(url: string, body: any, options?: RequestOptions): Observable<Response> {
 
         if (options) {
             options = this._setRequestOptions(options);
         } else {
             options = this._setRequestOptions();
         }
+        console.log(body);
         return this.http.post(url, body, options);
-    }
-
-    private _setAuthHeaders(user: any) {
-        this.authHeaders = new Headers();
-        this.authHeaders.append('Authorization', user.token_type + ' ' + user.access_token);
-        this.authHeaders.append('Content-Type', 'application/json');
     }
 
     public _setRequestOptions(options?: RequestOptions) {
@@ -190,5 +181,15 @@ export class AuthBaseService {
         }
 
         return options;
+    }
+
+    private _setAuthHeaders(user: any) {
+        this.authHeaders = new Headers();
+        this.authHeaders.append('Authorization', user.token_type + ' ' + user.access_token);
+        this.authHeaders.append('Content-Type', 'application/json');
+    }
+
+    private handleError(){
+
     }
 }

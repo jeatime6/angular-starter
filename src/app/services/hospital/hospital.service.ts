@@ -4,6 +4,8 @@ import { Response } from '@angular/http';
 import { AuthBaseService } from '../auth/auth-base.service';
 import { BaseUrl } from '../../environment';
 
+import { ConceptHospitalModel, HospitalConfigHelper } from '../../models/HospitalConfigModel';
+
 import {
     SequencePaganitionViewModel,
     T_ConceptDetailViewModel
@@ -14,6 +16,65 @@ export class HospitalService {
 
     constructor(public authBaseService: AuthBaseService) {
 
+    }
+
+    /**
+     * 根据配置信息创建医院实体
+     * @memberOf HospitalService
+     */
+    createHospitalModel(hospital: ConceptHospitalModel) {
+        return <T_ConceptDetailViewModel>{
+            Attributes: [
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.TypeAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalType,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.ProvinceAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalProvince,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.CityAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalCity,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.CountyAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalCity,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.LevelAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalLevel,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.AddressAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalAddress,
+                    AttributeSort: 0
+                },
+                {
+                    AttributeID: "",
+                    ConceptTypeAttrID: HospitalConfigHelper.BedCountAttrModel.AttributeID,
+                    AttributeValue: hospital.HospitalBedCount,
+                    AttributeSort: 0
+                }
+            ],
+            Synonymes: [],
+            ConceptDefinition: hospital.ConceptDefinition,
+            ConceptTypeID: HospitalConfigHelper.ConceptTypeModel.ConceptTypeID,
+            ConceptName: hospital.ConceptName,
+            ConceptNameAb: hospital.ConceptNameAb,
+            ConceptCode: hospital.ConceptCode
+        };
     }
 
     /**

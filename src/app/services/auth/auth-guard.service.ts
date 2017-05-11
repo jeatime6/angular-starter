@@ -13,7 +13,11 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
         private authBaseService: AuthBaseService,
         private router: Router,
         private modalService: NgbModal
-    ) { }
+    ) {
+        // this.router.events.subscribe((event) => {
+        //     console.log(event);
+        // });
+    }
 
     public canActivate() {
         // console.log('canActivate');
