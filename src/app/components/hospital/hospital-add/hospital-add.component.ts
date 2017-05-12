@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CommonAlertComponent } from '../../common/common-alert/common-alert.component';
-import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
 import { T_ConceptDetailViewModel } from 'crabyter-p0-server/ViewModel';
 import { ConceptHospitalType, ConceptHospitalLevel } from 'crabyter-p0-server/Enum';
 
-import { HospitalService } from '../../../services';
+import { HospitalService, CommonAlertService } from '../../../services';
 import { ConceptHospitalModel, HospitalConfigHelper } from '../../../models/HospitalConfigModel';
+
+import _ from 'lodash';
 
 @Component({
   selector: 'app-hospital-add',
@@ -25,9 +24,9 @@ export class HospitalAddComponent implements OnInit {
 
   constructor
     (
+    private commonAlertService: CommonAlertService,
     private hospitalService: HospitalService,
-    private router: Router,
-    private modalService: NgbModal
+    private router: Router
     ) { }
 
   ngOnInit() {
@@ -38,22 +37,20 @@ export class HospitalAddComponent implements OnInit {
     let hospital = this.hospitalService.createConceptHospitalModel(this.hospitalDetail);
     console.log(hospital);
     this.hospitalService.addHospital(hospital)
-      .subscribe((data) => {
-        let modalAlert = this.modalService
-          .open(CommonAlertComponent, <NgbModalOptions>{
-            size: 'sm',
-            keyboard: false,
-            backdrop: 'static'
-          });
-        modalAlert.componentInstance.setConfig({ isAlert: false, message: '添加成功！是否继续添加？' });
-        modalAlert.result.then((res) => {
-          if (res) {
-            this.hospitalDetail = <ConceptHospitalModel>{};
-          } else {
-            this.router.navigate(['/hospital']);
-          }
-        });
-      });
+      .filter((hospital) => !_.isNil(hospital))
+      .switch((hospital) => { this.commonAlertService.openModal(); })
+      .map(()=>{});
+
+      // .subscribe((data) => {
+      //   this.commonAlertService.openModal({ isAlert: false, message: '添加成功！是否继续添加？' })
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         this.hospitalDetail = <ConceptHospitalModel>{};
+      //       } else {
+      //         this.router.navigate(['/hospital']);
+      //       }
+      //     });
+      // });
   }
 
   public back() {
