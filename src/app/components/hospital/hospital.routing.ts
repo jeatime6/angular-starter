@@ -30,7 +30,7 @@ const routes: Routes = [
         data: {
           title: '修改医院'
         },
-        component: HospitalAddComponent
+        component: HospitalUpdateComponent
       }
     ]
   }

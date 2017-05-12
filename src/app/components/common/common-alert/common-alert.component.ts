@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 
 import { NgbModal, NgbActiveModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
+import { ICommonModalService } from '../../../services/common/common-modal.service';
+
 import _ from 'lodash';
 
 export interface CommonAlertContext {
   /**
    * 是否是提示框
    */
-  isAlert: boolean;
+  isAlert?: boolean;
   /**
    * 标题
    */
@@ -32,7 +34,7 @@ export interface CommonAlertContext {
   templateUrl: './common-alert.component.html',
   styleUrls: ['./common-alert.component.css']
 })
-export class CommonAlertComponent {
+export class CommonAlertComponent implements ICommonModalService {
 
   context = <CommonAlertContext>{
     isAlert: true,
@@ -41,20 +43,22 @@ export class CommonAlertComponent {
     cancel: '取消'
   };
 
-  constructor(public activeModal: NgbActiveModal) {
+  constructor
+    (
+    public activeModal: NgbActiveModal
+    ) {
 
   }
 
   /**
-   * 设置显示类型
+   * 设置显示类型，组件入口
    * 
    * @param {CommonAlertContext} options 
    * 
    * @memberOf CommonAlertComponent
    */
-  setConfig(options?: any) {
+  afterOpen(options?: any) {
     _.extend(this.context, options);
-    return this;
   }
 
   /**
@@ -67,6 +71,4 @@ export class CommonAlertComponent {
   close(isOk: boolean) {
     this.activeModal.close(isOk);
   }
-
-
 }

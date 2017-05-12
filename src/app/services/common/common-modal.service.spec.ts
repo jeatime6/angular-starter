@@ -1,16 +1,16 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { CommonAlertService } from './common-alert.service';
+import { CommonModalService } from './common-modal.service';
 
-describe('Service: CommonAlert', () => {
+describe('Service: CommonModal', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CommonAlertService]
+      providers: [CommonModalService]
     });
   });
 
-  it('should ...', inject([CommonAlertService], (service: CommonAlertService) => {
+  it('should ...', inject([CommonModalService], (service: CommonModalService) => {
     expect(service).toBeTruthy();
   }));
 });

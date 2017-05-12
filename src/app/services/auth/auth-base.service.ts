@@ -3,10 +3,10 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Subject, Observable } from 'rxjs';
+import { Store, Action } from '@ngrx/store';
 import { LoginUserModel, AuthInfoModel } from '../../models/LoginUserModel';
-import { LOGIN, LOGOUT, AUTH_USER } from '../../actions/layout-sidebar.action';
+import { LOGIN, LOGOUT, AUTH_USER, ADD_LOADING, REMOVE_LOADING } from '../../actions/layout-sidebar.action';
 
 import { UserManager, Log, MetadataService, User } from 'oidc-client';
 import { AuthSettings } from '../../environment';
@@ -16,32 +16,32 @@ import _ from 'lodash';
 @Injectable()
 export class AuthBaseService {
     mgr = new UserManager(AuthSettings);
-
     loginUser: Observable<LoginUserModel>;
     authHeaders: Headers;
 
     constructor(
         private http: Http,
         private router: Router,
-        private store$: Store<LoginUserModel>
+        private loginUser$: Store<LoginUserModel>,
+        private busyLoading$: Store<string[]>
     ) {
         this.mgr.events.addUserLoaded((user) => {
             let loginUser = <LoginUserModel>{
                 IsLogin: true,
                 UserInfo: user
             };
-            store$.dispatch({
+            loginUser$.dispatch({
                 type: LOGIN,
                 payload: loginUser
             });
         });
         this.mgr.events.addUserUnloaded((e) => {
-            store$.dispatch({
+            loginUser$.dispatch({
                 type: LOGOUT,
                 payload: null
             });
         });
-        this.loginUser = store$.select('loginUserReducer').filter((loginUser: LoginUserModel) => { return !_.isNil(loginUser) && !_.isNil(loginUser.UserInfo); });
+        this.loginUser = loginUser$.select('loginUserReducer').filter((loginUser: LoginUserModel) => { return !_.isNil(loginUser) && !_.isNil(loginUser.UserInfo); });
         this.loginUser.subscribe((loginUser) => {
             // console.log('ngrx -- setAuthHeaders');
             // console.log(loginUser);
@@ -62,7 +62,7 @@ export class AuthBaseService {
                     IsLogin: true,
                     UserInfo: user
                 };
-                this.store$.dispatch({
+                this.loginUser$.dispatch({
                     type: LOGIN,
                     payload: loginUser
                 });
@@ -124,52 +124,60 @@ export class AuthBaseService {
      * @param options if options are not supplied the default content type is application/json
      */
     public AuthGet(url: string, options?: RequestOptions): Observable<Response> {
+        let uniqueId = _.uniqueId();
+        this.busyLoading$.dispatch({ type: ADD_LOADING, payload: uniqueId });
+
         if (options) {
             options = this._setRequestOptions(options);
         } else {
             options = this._setRequestOptions();
         }
-        return this.http.get(url, options);
+        return this.http.get(url, options).do(() => { this.busyLoading$.dispatch({ type: REMOVE_LOADING, payload: uniqueId }) });
     }
 
     /**
      * @param options if options are not supplied the default content type is application/json
      */
     public AuthPut(url: string, body: any, options?: RequestOptions): Observable<Response> {
+        let uniqueId = _.uniqueId();
+        this.busyLoading$.dispatch({ type: ADD_LOADING, payload: uniqueId });
 
         if (options) {
             options = this._setRequestOptions(options);
         } else {
             options = this._setRequestOptions();
         }
-        return this.http.put(url, body, options);
+        return this.http.put(url, body, options).do(() => { this.busyLoading$.dispatch({ type: REMOVE_LOADING, payload: uniqueId }) });
     }
 
     /**
      * @param options if options are not supplied the default content type is application/json
      */
     public AuthDelete(url: string, options?: RequestOptions): Observable<Response> {
+        let uniqueId = _.uniqueId();
+        this.busyLoading$.dispatch({ type: ADD_LOADING, payload: uniqueId });
 
         if (options) {
             options = this._setRequestOptions(options);
         } else {
             options = this._setRequestOptions();
         }
-        return this.http.delete(url, options);
+        return this.http.delete(url, options).do(() => { this.busyLoading$.dispatch({ type: REMOVE_LOADING, payload: uniqueId }) });
     }
 
     /**
      * @param options if options are not supplied the default content type is application/json
      */
     public AuthPost(url: string, body: any, options?: RequestOptions): Observable<Response> {
+        let uniqueId = _.uniqueId();
+        this.busyLoading$.dispatch({ type: ADD_LOADING, payload: uniqueId });
 
         if (options) {
             options = this._setRequestOptions(options);
         } else {
             options = this._setRequestOptions();
         }
-        console.log(body);
-        return this.http.post(url, body, options);
+        return this.http.post(url, body, options).do(() => { this.busyLoading$.dispatch({ type: REMOVE_LOADING, payload: uniqueId }) });
     }
 
     public _setRequestOptions(options?: RequestOptions) {
@@ -189,7 +197,7 @@ export class AuthBaseService {
         this.authHeaders.append('Content-Type', 'application/json');
     }
 
-    private handleError(){
+    private handleError() {
 
     }
 }

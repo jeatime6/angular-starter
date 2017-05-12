@@ -5,8 +5,8 @@
     <div>{{context.message}}</div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="close(true)">{{context.ok}}</button>
+    <button type="button" class="btn btn-primary" (click)="beforeClose(true)">{{context.ok}}</button>
     <ng-container *ngIf="!context.isAlert">
-        <button type="button" class="btn btn-secondary" (click)="close(false)">{{context.cancel}}</button>
+        <button type="button" class="btn btn-secondary" (click)="beforeClose(false)">{{context.cancel}}</button>
     </ng-container>
 </div>

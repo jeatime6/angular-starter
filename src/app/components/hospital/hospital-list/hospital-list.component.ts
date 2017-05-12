@@ -8,11 +8,8 @@ import {
   T_ConceptDetailViewModel
 } from 'crabyter-p0-server/ViewModel';
 
-import { CommonAlertComponent } from '../../common/common-alert/common-alert.component';
-import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
 import { HospitalConfigHelper } from '../../../models/HospitalConfigModel';
-import { AuthBaseService, HospitalService } from '../../../services';
+import { AuthBaseService, HospitalService, CommonModalService } from '../../../services';
 
 @Component({
   selector: 'app-hospital-list',
@@ -35,16 +32,17 @@ export class HospitalListComponent implements OnInit, OnDestroy {
     private router: Router,
     private authBaseService: AuthBaseService,
     private hospitalService: HospitalService,
-    private modalService: NgbModal
+    private commonModalService: CommonModalService
   ) {
     this.subscribleHospital = this.pageIndex$.asObservable()
       .flatMap((pageIndex) => {
-        console.log(pageIndex);
+        // console.log(pageIndex);
         return this.hospitalService.getHospitals(pageIndex);
       })
-      .subscribe((data) => {
+      .do((data) => {
         this.hospitalPageInfo = data;
-      });
+      })
+      .subscribe();
   }
 
   ngOnInit() {
@@ -81,19 +79,11 @@ export class HospitalListComponent implements OnInit, OnDestroy {
    * 删除医院
    */
   public deleteHospital(hospitalId: string) {
-    let modalAlert = this.modalService
-      .open(CommonAlertComponent, <NgbModalOptions>{
-        size: 'sm',
-        keyboard: false,
-        backdrop: 'static'
-      });
-    modalAlert.componentInstance.setConfig({ isAlert: false, message: '确定删除吗？' });
-    modalAlert.result.then((res) => {
-      if (res) {
-        this.hospitalService.deleteHospital(hospitalId).subscribe((data) => {
-
-        });
-      }
-    });
+    this.commonModalService.openAlert({ isAlert: false, message: '确定删除吗？' })
+      .filter((res) => res)
+      .flatMap((res) => {
+        return this.hospitalService.deleteHospital(hospitalId);
+      })
+      .subscribe();
   }
 }

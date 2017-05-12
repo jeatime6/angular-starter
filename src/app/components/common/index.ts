@@ -6,3 +6,4 @@ export * from './common-notfound/common-notfound.component';
 export * from './common-unavailable/common-unavailable.component';
 
 export * from './common-alert/common-alert.component';
+export * from './common-loading/common-loading.component';

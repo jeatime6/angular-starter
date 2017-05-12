@@ -1,10 +1,11 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { T_ConceptDetailViewModel } from 'crabyter-p0-server/ViewModel';
 import { ConceptHospitalType, ConceptHospitalLevel } from 'crabyter-p0-server/Enum';
 
-import { HospitalService, CommonAlertService } from '../../../services';
+import { HospitalService, CommonModalService } from '../../../services';
 import { ConceptHospitalModel, HospitalConfigHelper } from '../../../models/HospitalConfigModel';
 
 import _ from 'lodash';
@@ -24,7 +25,7 @@ export class HospitalAddComponent implements OnInit {
 
   constructor
     (
-    private commonAlertService: CommonAlertService,
+    private commonModalService: CommonModalService,
     private hospitalService: HospitalService,
     private router: Router
     ) { }
@@ -33,26 +34,39 @@ export class HospitalAddComponent implements OnInit {
 
   }
 
+  /**
+   * 提交
+   * 
+   * 
+   * @memberOf HospitalAddComponent
+   */
   public submitHospital() {
     let hospital = this.hospitalService.createConceptHospitalModel(this.hospitalDetail);
     console.log(hospital);
-    this.hospitalService.addHospital(hospital)
-      .filter((hospital) => !_.isNil(hospital))
-      .switch((hospital) => { this.commonAlertService.openModal(); })
-      .map(()=>{});
 
-      // .subscribe((data) => {
-      //   this.commonAlertService.openModal({ isAlert: false, message: '添加成功！是否继续添加？' })
-      //     .subscribe((res) => {
-      //       if (res) {
-      //         this.hospitalDetail = <ConceptHospitalModel>{};
-      //       } else {
-      //         this.router.navigate(['/hospital']);
-      //       }
-      //     });
-      // });
+    this.hospitalService.addHospital(hospital)
+      .filter((hospital) => {
+        return !_.isNil(hospital);
+      })
+      .flatMap((hospital) => {
+        return this.commonModalService.openAlert({ isAlert: false, message: '添加成功！是否继续添加？' });
+      })
+      .do((res) => {
+        if (res) {
+          this.hospitalDetail = <ConceptHospitalModel>{};
+        } else {
+          this.router.navigate(['/hospital']);
+        }
+      }).take(1).subscribe();
   }
 
+
+  /**
+   * 返回上一级
+   * 
+   * 
+   * @memberOf HospitalAddComponent
+   */
   public back() {
     this.router.navigate(['/hospital']);
   }

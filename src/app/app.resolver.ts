@@ -1,4 +1,4 @@
-import { AuthBaseService, HospitalService, AuthGuardService, CommonAlertService } from './services';
+import { AuthBaseService, HospitalService, AuthGuardService, CommonModalService } from './services';
 
 // an array of services to resolve routes with data
 export const APP_RESOLVER_PROVIDERS = [
@@ -6,5 +6,5 @@ export const APP_RESOLVER_PROVIDERS = [
   HospitalService,
   AuthGuardService,
 
-  CommonAlertService
+  CommonModalService
 ];

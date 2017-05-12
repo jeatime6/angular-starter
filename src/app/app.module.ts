@@ -20,6 +20,8 @@ import { AppComponent } from './app.component';
 
 import {
   CommonAlertComponent,
+  CommonLoadingComponent,
+
   CommonAuthComponent,
   CommonUnauthComponent,
   CommonLayoutComponent,
@@ -29,7 +31,7 @@ import {
 } from './components/common';
 
 // reducers
-import { LayoutSideBarReducer, LoginUserReducer } from './reducers';
+import { LayoutSideBarReducer, LoginUserReducer, BusyLoadingReducer } from './reducers';
 
 // directives
 import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirective } from './directives';
@@ -55,6 +57,8 @@ const APP_PROVIDERS = [
     AppComponent,
 
     CommonAlertComponent,
+    CommonLoadingComponent,
+
     CommonAuthComponent,
     CommonUnauthComponent,
     CommonLayoutComponent,
@@ -77,7 +81,8 @@ const APP_PROVIDERS = [
     // ngrx
     StoreModule.provideStore({
       layoutSideBarReducers: LayoutSideBarReducer,
-      loginUserReducer: LoginUserReducer
+      loginUserReducer: LoginUserReducer,
+      busyLoadingReducer: BusyLoadingReducer
     })
   ],
   providers: [
@@ -85,7 +90,8 @@ const APP_PROVIDERS = [
     APP_PROVIDERS
   ],
   entryComponents: [
-    CommonAlertComponent
+    CommonAlertComponent,
+    CommonLoadingComponent
   ]
 })
 

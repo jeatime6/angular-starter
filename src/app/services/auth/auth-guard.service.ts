@@ -1,8 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import {
+    CanActivate,
+    CanActivateChild,
+    Router,
+    Event,
+    NavigationStart,
+    NavigationEnd,
+    NavigationCancel,
+    NavigationError
+} from '@angular/router';
+
+import { Store } from '@ngrx/store';
+import { ADD_LOADING, REMOVE_LOADING, REMOVEALL_LOADING } from '../../actions/layout-sidebar.action';
 
 import { AuthBaseService } from './auth-base.service';
-import { CommonAlertService } from '../common/common-alert.service';
+import { CommonModalService } from '../common/common-modal.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate, CanActivateChild {
@@ -10,10 +22,19 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
     constructor(
         private router: Router,
         private authBaseService: AuthBaseService,
-        private commonAlertService: CommonAlertService
+        private commonModalService: CommonModalService,
+        private busyLoading$: Store<string[]>
     ) {
-        // this.router.events.subscribe((event) => {
+        // this.router.events.subscribe((event: Event) => {
         //     console.log(event);
+        //     if (event instanceof NavigationStart) {
+        //         this.busyLoading$.dispatch({ type: ADD_LOADING, payload: 'ROUTELOADING' });
+        //     }
+        //     if (event instanceof NavigationEnd
+        //         || event instanceof NavigationCancel
+        //         || event instanceof NavigationError) {
+        //         this.busyLoading$.dispatch({ type: REMOVE_LOADING, payload: 'ROUTELOADING' });
+        //     }
         // });
     }
 
@@ -32,8 +53,8 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
         isLoggedIn.subscribe((loggedIn: boolean) => {
             if (!loggedIn) {
                 // 提示跳转
-                this.commonAlertService
-                    .openModal({ message: '请先登陆！' })
+                this.commonModalService
+                    .openAlert({ message: '请先登陆！' })
                     .subscribe((res) => {
                         this.authBaseService.startSigninMainWindow();
                     });

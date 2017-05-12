@@ -8,7 +8,7 @@ import { LoginUserModel, AuthInfoModel } from '../../../models/LoginUserModel';
 import { SidebarNavGroupModel, SidebarNavItemModel } from '../../../models/SidebarNavModel';
 import { ADD_NAV, REPLACE_NAV } from '../../../actions/layout-sidebar.action';
 
-import { AuthBaseService } from '../../../services';
+import { AuthBaseService, CommonModalService } from '../../../services';
 
 import _ from 'lodash';
 
@@ -23,11 +23,14 @@ export class CommonLayoutComponent implements OnInit, OnDestroy {
   layoutSideBars: Observable<SidebarNavGroupModel[]>;
   loginUserSubscriber: Subscription;
   loginUserName = '';
+  loadingInstance = null;
 
   constructor(
-    public authBaseService: AuthBaseService,
-    public storeSideBar$: Store<SidebarNavGroupModel[]>,
-    public storeLoginUser$: Store<User>
+    private commonModalService: CommonModalService,
+    private authBaseService: AuthBaseService,
+    private storeSideBar$: Store<SidebarNavGroupModel[]>,
+    private storeLoginUser$: Store<User>,
+    private busyLoading$: Store<string[]>
   ) {
     // 左侧导航
     this.layoutSideBars = storeSideBar$.select('layoutSideBarReducers');
@@ -35,9 +38,19 @@ export class CommonLayoutComponent implements OnInit, OnDestroy {
     this.loginUserSubscriber = storeLoginUser$.select('loginUserReducer')
       .filter((loginUser: LoginUserModel) => { return !_.isNil(loginUser) && !_.isNil(loginUser.UserInfo); })
       .map((loginUser: LoginUserModel) => { return loginUser.UserInfo })
-      .subscribe((user) => {
-        this.loginUserName = user.profile.preferred_username;;
-      });
+      .do((user) => { this.loginUserName = user.profile.preferred_username; })
+      .subscribe();
+    // loading
+    this.busyLoading$.select('busyLoadingReducer')
+      .debounceTime(800)
+      .do((uniqueIds: string[]) => {
+        if (uniqueIds.length > 0 && _.isNil(this.loadingInstance)) {
+          this.loadingInstance = this.commonModalService.openLoading();
+        } else if (uniqueIds.length === 0 && !_.isNil(this.loadingInstance)) {
+          this.loadingInstance.close();
+        }
+      })
+      .subscribe();
   }
 
   ngOnInit(): void {

@@ -3,13 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable, Subscription } from 'rxjs';
 
-import { CommonAlertComponent } from '../../common/common-alert/common-alert.component';
-import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
 import { T_ConceptDetailViewModel } from 'crabyter-p0-server/ViewModel';
 import { ConceptHospitalType, ConceptHospitalLevel } from 'crabyter-p0-server/Enum';
 
-import { HospitalService } from '../../../services';
+import { HospitalService, CommonModalService } from '../../../services';
 import { ConceptHospitalModel, HospitalConfigHelper } from '../../../models/HospitalConfigModel';
 
 import _ from 'lodash';
@@ -21,6 +18,7 @@ import _ from 'lodash';
 })
 export class HospitalUpdateComponent implements OnInit, OnDestroy {
 
+  // 获取医院信息
   private hospital$: Subscription;
 
   // 模板绑定数据
@@ -32,9 +30,9 @@ export class HospitalUpdateComponent implements OnInit, OnDestroy {
 
   constructor(
     private hospitalService: HospitalService,
+    private commonModalService: CommonModalService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private modalService: NgbModal
+    private router: Router
   ) {
     this.hospital$ = this.activatedRoute.params
       .map((params): string => {
@@ -46,11 +44,12 @@ export class HospitalUpdateComponent implements OnInit, OnDestroy {
       .do((id) => {
         this.hospitalId = id;
       })
-      .switchMap((id) => {
+      .flatMap((id) => {
         return this.hospitalService.getHospital(id);
       })
       .do((data) => {
         this.hospitalDetail = this.hospitalService.createHospitalModel(data);
+        console.log(this.hospitalDetail);
       }).subscribe();
   }
 
@@ -62,29 +61,33 @@ export class HospitalUpdateComponent implements OnInit, OnDestroy {
     this.hospital$.unsubscribe();
   }
 
+  /**
+   * 提交修改
+   * 
+   * 
+   * @memberOf HospitalUpdateComponent
+   */
   public submitHospital() {
     let hospital = this.hospitalService.createConceptHospitalModel(this.hospitalDetail);
     hospital.ConceptID = this.hospitalId;
     console.log(hospital);
+
     this.hospitalService.updateHospital(this.hospitalId, hospital)
-      .subscribe((data) => {
-        let modalAlert = this.modalService
-          .open(CommonAlertComponent, <NgbModalOptions>{
-            size: 'sm',
-            keyboard: false,
-            backdrop: 'static'
-          });
-        modalAlert.componentInstance.setConfig({ isAlert: false, message: '添加成功！是否继续添加？' });
-        modalAlert.result.then((res) => {
-          if (res) {
-            this.hospitalDetail = <ConceptHospitalModel>{};
-          } else {
-            this.router.navigate(['/hospital']);
-          }
-        });
-      });
+      .filter((hospital) => {
+        return !_.isNil(hospital);
+      })
+      .do((hospital) => {
+        this.commonModalService.openAlert({ message: '修改成功！' });
+      }).subscribe();
   }
 
+
+  /**
+   * 返回
+   * 
+   * 
+   * @memberOf HospitalUpdateComponent
+   */
   public back() {
     this.router.navigate(['/hospital']);
   }
