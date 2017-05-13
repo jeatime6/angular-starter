@@ -110,6 +110,6 @@ export class CommonModalService {
     private open(modalComponent: any, modalContext?: any, options?: NgbModalOptions) {
         let modal = this.modalService.open(modalComponent, options);
         modal.componentInstance.afterOpen(modalContext);
-        return modal.componentInstance;
+        return modal;
     }
 }

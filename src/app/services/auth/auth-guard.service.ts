@@ -11,7 +11,11 @@ import {
 } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { ADD_LOADING, REMOVE_LOADING, REMOVEALL_LOADING } from '../../actions/layout-sidebar.action';
+import {
+    ADD_LOADING,
+    REMOVE_LOADING,
+    REMOVEALL_LOADING
+} from '../../actions/layout-sidebar.action';
 
 import { AuthBaseService } from './auth-base.service';
 import { CommonModalService } from '../common/common-modal.service';

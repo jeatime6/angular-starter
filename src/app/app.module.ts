@@ -34,7 +34,11 @@ import {
 import { LayoutSideBarReducer, LoginUserReducer, BusyLoadingReducer } from './reducers';
 
 // directives
-import { NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES, AsideToggleDirective } from './directives';
+import { 
+  NAV_DROPDOWN_DIRECTIVES, 
+  SIDEBAR_TOGGLE_DIRECTIVES, 
+  AsideToggleDirective 
+} from './directives';
 
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 
@@ -95,7 +99,4 @@ const APP_PROVIDERS = [
   ]
 })
 
-export class AppModule {
-  constructor(
-  ) { }
-}
+export class AppModule {}
