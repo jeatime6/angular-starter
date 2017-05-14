@@ -48,15 +48,27 @@
                         <div class="form-group row">
                             <div class="col-md-2">
                                 <label class="form-form-control-label">省</label>
-                                <input type="text" class="form-control" name="HospitalProvince" [(ngModel)]="hospitalDetail.HospitalProvince">
+                                <select class="form-control" name="HospitalProvince" [(ngModel)]="hospitalDetail.HospitalProvince" #selectProvice>
+                                    <ng-container  *ngFor="let item of proviceData">
+                                        <option [value]="item.id">{{item.name}}</option>
+                                    </ng-container>                                  
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-form-control-label">市</label>
-                                <input type="text" class="form-control" name="HospitalCity" [(ngModel)]="hospitalDetail.HospitalCity">
+                                <select class="form-control" name="HospitalCity" [(ngModel)]="hospitalDetail.HospitalCity" #selectCity>
+                                     <ng-container  *ngFor="let item of cityData">
+                                        <option [value]="item.id">{{item.name}}</option>
+                                    </ng-container>                                  
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-form-control-label">县</label>
-                                <input type="text" class="form-control" name="HospitalCounty" [(ngModel)]="hospitalDetail.HospitalCounty">
+                                <select class="form-control" name="HospitalCounty" [(ngModel)]="hospitalDetail.HospitalCounty">
+                                     <ng-container  *ngFor="let item of countyData">
+                                        <option [value]="item.id">{{item.name}}</option>
+                                    </ng-container>                             
+                                </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-form-control-label">医院地址</label>

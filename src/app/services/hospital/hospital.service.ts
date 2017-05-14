@@ -8,7 +8,8 @@ import { ConceptHospitalModel, HospitalConfigHelper } from '../../models/Hospita
 
 import {
     SequencePaganitionViewModel,
-    T_ConceptDetailViewModel
+    T_ConceptDetailViewModel,
+    ProvinceAndCityDataViewModel
 } from 'crabyter-p0-server/ViewModel';
 
 import _ from 'lodash';
@@ -79,6 +80,15 @@ export class HospitalService {
         };
     }
 
+
+    /**
+     * 创建医院信息实体
+     * 
+     * @param {T_ConceptDetailViewModel} conceptDetail 
+     * @returns 
+     * 
+     * @memberOf HospitalService
+     */
     public createHospitalModel(conceptDetail: T_ConceptDetailViewModel) {
         let hospital = <ConceptHospitalModel>{};
         if (!_.isNil(conceptDetail)) {
@@ -190,6 +200,19 @@ export class HospitalService {
     }
 
     /**
+     * 省市信息
+     * 
+     * @param {string} [parentId] 
+     * @returns 
+     * 
+     * @memberOf HospitalService
+     */
+    public getProvinceInfo(parentId: string = null) {
+        return this.authBaseService.AuthGet(this.createApiUrl(`/concepts/provinceAndCity/${parentId}`))
+            .map((rep: Response) => rep.json().result as ProvinceAndCityDataViewModel[]);
+    }
+
+    /**
      * 创建API地址
      * 
      * @private
@@ -201,4 +224,5 @@ export class HospitalService {
     private createApiUrl(apiUrl: string): string {
         return `${BaseUrl}${apiUrl}`;
     }
+
 }
