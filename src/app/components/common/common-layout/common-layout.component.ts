@@ -30,7 +30,8 @@ export class CommonLayoutComponent implements OnInit, OnDestroy {
     private authBaseService: AuthBaseService,
     private storeSideBar$: Store<SidebarNavGroupModel[]>,
     private storeLoginUser$: Store<User>,
-    private busyLoading$: Store<string[]>
+    private busyLoading$: Store<string[]>,
+    private errorReport$: Store<string>
   ) {
     // 左侧导航
     this.layoutSideBars = storeSideBar$.select('layoutSideBarReducers');
@@ -49,6 +50,15 @@ export class CommonLayoutComponent implements OnInit, OnDestroy {
         } else if (uniqueIds.length === 0 && !_.isNil(this.loadingInstance)) {
           this.loadingInstance.close();
         }
+      })
+      .subscribe();
+    // 错误报告
+    this.errorReport$.select('errorReportReducer')
+      .filter((errorMessage: string) => {
+        return !_.isNil(errorMessage) && errorMessage !== '';
+      })
+      .do((errorMessage: string) => {
+        this.commonModalService.openAlert({ message: errorMessage });
       })
       .subscribe();
   }

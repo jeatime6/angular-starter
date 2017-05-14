@@ -2,14 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Subject, Observable, Subscription } from 'rxjs';
-import { ConceptHospitalType } from 'crabyter-p0-server/Enum';
+
 import {
   SequencePaganitionViewModel,
   T_ConceptDetailViewModel
 } from 'crabyter-p0-server/ViewModel';
+import { ConceptHospitalType, ConceptHospitalLevel } from 'crabyter-p0-server/Enum';
 
-import { HospitalConfigHelper } from '../../../models/HospitalConfigModel';
+import { ConceptHospitalModel, HospitalConfigHelper } from '../../../models/HospitalConfigModel';
 import { AuthBaseService, HospitalService, CommonModalService } from '../../../services';
+
+import _ from 'lodash';
 
 @Component({
   selector: 'app-hospital-list',
@@ -19,6 +22,7 @@ import { AuthBaseService, HospitalService, CommonModalService } from '../../../s
 export class HospitalListComponent implements OnInit, OnDestroy {
 
   public pageIndex$ = new Subject<number>();
+  public pageData: Array<ConceptHospitalModel> = [];
 
   public subscribleHospital: Subscription;
   public hospitalPageInfo = <SequencePaganitionViewModel>
@@ -27,6 +31,9 @@ export class HospitalListComponent implements OnInit, OnDestroy {
     PageNumber: 1,
     Sequences: [] as T_ConceptDetailViewModel[]
   };
+
+  enumConceptHospitalType = ConceptHospitalType;
+  enumConceptHospitalLevel = ConceptHospitalLevel;
 
   constructor(
     private router: Router,
@@ -41,6 +48,11 @@ export class HospitalListComponent implements OnInit, OnDestroy {
       })
       .do((data) => {
         this.hospitalPageInfo = data;
+        // 生成医院信息实体
+        this.pageData = [];
+        this.hospitalPageInfo.Sequences.forEach((element) => {
+          this.pageData.push(this.hospitalService.createHospitalModel(element));
+        });
       })
       .subscribe();
   }
@@ -83,6 +95,11 @@ export class HospitalListComponent implements OnInit, OnDestroy {
       .filter((res) => res)
       .flatMap((res) => {
         return this.hospitalService.deleteHospital(hospitalId);
+      })
+      .do((res) => {
+        _.remove(this.pageData, (item) => {
+          return item.ConceptID === hospitalId;
+        });
       })
       .subscribe();
   }

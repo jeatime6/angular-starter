@@ -24,6 +24,7 @@ export class HospitalConfigModel {
  * @class ConceptHospitalModel
  */
 export class ConceptHospitalModel {
+    ConceptID: string;
     ConceptName: string;
     ConceptNameAb: string;
     ConceptCode: string;
@@ -34,7 +35,7 @@ export class ConceptHospitalModel {
     HospitalCity: string;
     HospitalCounty: string;
     HospitalAddress: string;
-    HospitalBedCount:string;
+    HospitalBedCount: string;
 }
 
 /**

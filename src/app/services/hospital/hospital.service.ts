@@ -13,6 +13,7 @@ import {
 } from 'crabyter-p0-server/ViewModel';
 
 import _ from 'lodash';
+import pinyin from 'pinyin';
 
 @Injectable()
 export class HospitalService {
@@ -26,58 +27,105 @@ export class HospitalService {
      * @memberOf HospitalService
      */
     public createConceptHospitalModel(hospital: ConceptHospitalModel) {
-        return <T_ConceptDetailViewModel>{
-            Attributes: [
-                {
+        return <T_ConceptDetailViewModel>
+            {
+                Attributes: [{
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.TypeAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.TypeAttrModel,
+                    AttributeName: HospitalConfigHelper.TypeAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.TypeAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalType,
+                    ControlType: HospitalConfigHelper.TypeAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.TypeAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.TypeAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.ProvinceAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.ProvinceAttrModel,
+                    AttributeName: HospitalConfigHelper.ProvinceAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.ProvinceAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalProvince,
+                    ControlType: HospitalConfigHelper.ProvinceAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.ProvinceAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.ProvinceAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.CityAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.CityAttrModel,
+                    AttributeName: HospitalConfigHelper.CityAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.CityAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalCity,
+                    ControlType: HospitalConfigHelper.CityAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.CityAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.CityAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.CountyAttrModel.AttributeID,
-                    AttributeValue: hospital.HospitalCity,
+                    ConceptTypeAttribute: HospitalConfigHelper.CountyAttrModel,
+                    AttributeName: HospitalConfigHelper.CountyAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.CountyAttrModel.AttributeType,
+                    AttributeValue: hospital.HospitalCounty,
+                    ControlType: HospitalConfigHelper.CountyAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.CountyAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.CountyAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.LevelAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.LevelAttrModel,
+                    AttributeName: HospitalConfigHelper.LevelAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.LevelAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalLevel,
+                    ControlType: HospitalConfigHelper.LevelAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.LevelAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.LevelAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.AddressAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.AddressAttrModel,
+                    AttributeName: HospitalConfigHelper.AddressAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.AddressAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalAddress,
+                    ControlType: HospitalConfigHelper.AddressAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.AddressAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.AddressAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
-                },
-                {
+                }, {
                     AttributeID: "",
                     ConceptTypeAttrID: HospitalConfigHelper.BedCountAttrModel.AttributeID,
+                    ConceptTypeAttribute: HospitalConfigHelper.BedCountAttrModel,
+                    AttributeName: HospitalConfigHelper.BedCountAttrModel.AttributeName,
+                    AttributeType: HospitalConfigHelper.BedCountAttrModel.AttributeType,
                     AttributeValue: hospital.HospitalBedCount,
+                    ControlType: HospitalConfigHelper.BedCountAttrModel.ControlType,
+                    OptionItems: HospitalConfigHelper.BedCountAttrModel.OptionItems,
+                    IsMulti: HospitalConfigHelper.BedCountAttrModel.IsMulti,
+                    RelatedConceptIDs: [],
                     AttributeSort: 0
                 }
-            ],
-            Synonymes: [],
-            ConceptDefinition: hospital.ConceptDefinition,
-            ConceptTypeID: HospitalConfigHelper.ConceptTypeModel.ConceptTypeID,
-            ConceptName: hospital.ConceptName,
-            ConceptNameAb: hospital.ConceptNameAb,
-            ConceptCode: hospital.ConceptCode
-        };
+                ],
+                Synonymes: [],
+                ConceptDefinition: hospital.ConceptDefinition,
+                ConceptTypeID: HospitalConfigHelper.ConceptTypeModel.ConceptTypeID,
+                ConceptTypeName: HospitalConfigHelper.ConceptTypeModel.ConceptTypeName,
+                ConceptName: hospital.ConceptName,
+                ConceptNamePy: this.getFirstLetter(hospital.ConceptName),
+                ConceptNameEn: "",
+                ConceptCode: hospital.ConceptCode,
+                ConceptNameAb: hospital.ConceptNameAb,
+                ConceptID: ""
+            };
     }
 
 
@@ -92,6 +140,7 @@ export class HospitalService {
     public createHospitalModel(conceptDetail: T_ConceptDetailViewModel) {
         let hospital = <ConceptHospitalModel>{};
         if (!_.isNil(conceptDetail)) {
+            hospital.ConceptID = conceptDetail.ConceptID;
             hospital.ConceptCode = conceptDetail.ConceptCode;
             hospital.ConceptNameAb = conceptDetail.ConceptNameAb;
             hospital.ConceptName = conceptDetail.ConceptName;
@@ -223,6 +272,25 @@ export class HospitalService {
      */
     private createApiUrl(apiUrl: string): string {
         return `${BaseUrl}${apiUrl}`;
+    }
+
+
+    /**
+     * 汉字转拼音
+     * 
+     * @private
+     * @param {string} source 
+     * @returns 
+     * 
+     * @memberOf HospitalService
+     */
+    private getFirstLetter(source: string) {
+        let arrayLetter = pinyin(source, { style: pinyin.STYLE_FIRST_LETTER });
+        let res = '';
+        arrayLetter.forEach((element) => {
+            res = `${res}${element}`;
+        });
+        return res;
     }
 
 }

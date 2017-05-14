@@ -53,17 +53,33 @@ export class HospitalUpdateComponent implements OnInit, OnDestroy {
       .flatMap((id) => {
         return this.hospitalService.getHospital(id);
       })
-      .do((data) => {
-        this.hospitalDetail = this.hospitalService.createHospitalModel(data);
+      .map((data) => { return this.hospitalService.createHospitalModel(data); })
+      .do((detail) => {
+        this.hospitalDetail = detail;
         console.log(this.hospitalDetail);
+        // 获取省份信息
+        this.hospitalService.getProvinceInfo().subscribe((data) => {
+          this.proviceData = data;
+        });
+      })
+      .filter((detail) => { return !_.isNil(detail.HospitalProvince) && detail.HospitalProvince !== ''; })
+      .do((detail) => {
+        // 获取城市信息
+        console.log(detail.HospitalProvince);
+        this.hospitalService.getProvinceInfo(detail.HospitalProvince).subscribe((data) => {
+          this.cityData = data;
+        });
+      })
+      .filter((detail) => { return !_.isNil(detail.HospitalCity) && detail.HospitalCity !== ''; })
+      .do((detail) => {
+        // 获取县信息
+        this.hospitalService.getProvinceInfo(detail.HospitalCity).subscribe((data) => {
+          this.countyData = data;
+        });
       }).subscribe();
   }
 
   ngOnInit() {
-    // 获取省份信息
-    this.hospitalService.getProvinceInfo().subscribe((data) => {
-      this.proviceData = data;
-    });
 
     // 切换省
     Observable.fromEvent(this.selectProvice.nativeElement, 'change')

@@ -31,13 +31,18 @@ import {
 } from './components/common';
 
 // reducers
-import { LayoutSideBarReducer, LoginUserReducer, BusyLoadingReducer } from './reducers';
+import {
+  LayoutSideBarReducer,
+  LoginUserReducer,
+  BusyLoadingReducer,
+  ErrorReportReducer
+} from './reducers';
 
 // directives
-import { 
-  NAV_DROPDOWN_DIRECTIVES, 
-  SIDEBAR_TOGGLE_DIRECTIVES, 
-  AsideToggleDirective 
+import {
+  NAV_DROPDOWN_DIRECTIVES,
+  SIDEBAR_TOGGLE_DIRECTIVES,
+  AsideToggleDirective
 } from './directives';
 
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
@@ -86,7 +91,8 @@ const APP_PROVIDERS = [
     StoreModule.provideStore({
       layoutSideBarReducers: LayoutSideBarReducer,
       loginUserReducer: LoginUserReducer,
-      busyLoadingReducer: BusyLoadingReducer
+      busyLoadingReducer: BusyLoadingReducer,
+      errorReportReducer: ErrorReportReducer
     })
   ],
   providers: [
@@ -99,4 +105,4 @@ const APP_PROVIDERS = [
   ]
 })
 
-export class AppModule {}
+export class AppModule { }
